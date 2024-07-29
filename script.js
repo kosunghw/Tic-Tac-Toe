@@ -28,16 +28,22 @@ const createPlayer = function (name, marker) {
 
 const createGame = function (player1, player2) {
   let board = Gameboard.getBoard();
+  let moveCount = 0;
   const play = function (player, row, column) {
     if (board[row][column] === null) {
       Gameboard.setBoard(row, column, player.marker);
     } else {
       console.log("Already taken! Place again");
     }
-    checkWinner();
+    moveCount++;
+    checkWinner(row, column, moveCount);
   };
 
-  const checkWinner = function () {
+  const checkWinner = function (row, column, moveCount) {
+    // Announce draw if moveCount is 9
+    if (moveCount >= 9) {
+      console.log(`It is a draw!`);
+    }
     // check first row
     if (
       board[0][0] !== null &&
