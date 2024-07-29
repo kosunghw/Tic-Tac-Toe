@@ -94,3 +94,22 @@ const createGame = function (player1, player2) {
 
   return { play };
 };
+
+const screen = (function () {
+  let board = Gameboard.getBoard();
+
+  // cache DOM
+  const container = document.querySelector(".grid-container");
+
+  render();
+
+  function render() {
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 3; col++) {
+        // for each row and each column
+        document.getElementById(`row${row}col${col}`).textContent =
+          board[row][col];
+      }
+    }
+  }
+})();
