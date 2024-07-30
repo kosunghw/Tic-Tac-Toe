@@ -1,10 +1,11 @@
 // Create a factory function to create Gameboard object
 // Wrap inside an IIFE to create only one game board.
 const Gameboard = (function () {
-  let firstRow = [null, null, null];
-  let secondRow = [null, null, null];
-  let thirdRow = [null, null, null];
-  let gameBoard = [firstRow, secondRow, thirdRow];
+  let gameBoard = [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+  ];
 
   // function that shows the current board.
   //   const getBoard = () => gameBoard;
@@ -15,7 +16,11 @@ const Gameboard = (function () {
 
   const getBoard = () => gameBoard;
   const resetBoard = () => {
-    gameBoard = [firstRow, secondRow, thirdRow];
+    gameBoard = [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null],
+    ];
   };
 
   return { getBoard, setBoard, resetBoard };
@@ -26,25 +31,38 @@ const createPlayer = function (name, marker) {
   return { name, marker };
 };
 
-const createGame = function (player1, player2) {
-  let board = Gameboard.getBoard();
+// Game logics
+const Game = function (player1, player2) {
+  let player1Turn = true;
   let moveCount = 0;
-  const play = function (player, row, column) {
-    if (board[row][column] === null) {
-      Gameboard.setBoard(row, column, player.marker);
+  const play = function (row, column) {
+    let board = Gameboard.getBoard();
+    if (player1Turn) {
+      if (board[row][column] === null) {
+        Gameboard.setBoard(row, column, player1.marker);
+        checkWinner(++moveCount, row, column, player1);
+        player1Turn = !player1Turn;
+      } else {
+        console.log("Already taken! Place again");
+      }
     } else {
-      console.log("Already taken! Place again");
+      if (board[row][column] === null) {
+        Gameboard.setBoard(row, column, player2.marker);
+        checkWinner(++moveCount, row, column, player2);
+        player1Turn = !player1Turn;
+      } else {
+        console.log("Already taken! Place again");
+      }
     }
-    moveCount++;
-    checkWinner(moveCount, row, column, player);
   };
 
-  const checkWinner = function (moveCount, row, column, player) {
-    // Announce draw if move count is greater than or equal to 9
-    if (moveCount >= 9) {
-      console.log(`DRAW`);
-    }
+  function resetGame() {
+    Gameboard.resetBoard();
+    moveCount = 0;
+  }
 
+  const checkWinner = function (moveCount, row, column, player) {
+    let board = Gameboard.getBoard();
     // Check end conditions
 
     // Check column
@@ -54,6 +72,7 @@ const createGame = function (player1, player2) {
       }
       if (i === 2) {
         console.log(`${player.name} has won the game!`);
+        resetGame();
       }
     }
 
@@ -64,6 +83,7 @@ const createGame = function (player1, player2) {
       }
       if (i === 2) {
         console.log(`${player.name} has won the game!`);
+        resetGame();
       }
     }
 
@@ -75,6 +95,7 @@ const createGame = function (player1, player2) {
         }
         if (i === 2) {
           console.log(`${player.name} has won the game!`);
+          resetGame();
         }
       }
     }
@@ -87,8 +108,16 @@ const createGame = function (player1, player2) {
         }
         if (i === 2) {
           console.log(`${player.name} has won the game!`);
+          resetGame();
         }
       }
+    }
+
+    // Announce draw if move count is greater than or equal to 9
+
+    if (moveCount >= 9) {
+      console.log(`DRAW`);
+      resetGame();
     }
   };
 
@@ -96,20 +125,76 @@ const createGame = function (player1, player2) {
 };
 
 const screen = (function () {
-  let board = Gameboard.getBoard();
+  const player1 = createPlayer("sunghwan", "X");
+  const player2 = createPlayer("rachel", "O");
+  const game = Game(player1, player2);
 
   // cache DOM
   const container = document.querySelector(".grid-container");
 
+  container.addEventListener("click", addMarker);
+
   render();
 
   function render() {
+    board = Gameboard.getBoard();
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {
         // for each row and each column
         document.getElementById(`row${row}col${col}`).textContent =
           board[row][col];
       }
+    }
+  }
+
+  function addMarker(event) {
+    let target = event.target;
+
+    switch (target.id) {
+      case "row0col0":
+        game.play(0, 0);
+        render();
+        break;
+
+      case "row0col1":
+        game.play(0, 1);
+        render();
+        break;
+
+      case "row0col2":
+        game.play(0, 2);
+        render();
+        break;
+
+      case "row1col0":
+        game.play(1, 0);
+        render();
+        break;
+
+      case "row1col1":
+        game.play(1, 1);
+        render();
+        break;
+
+      case "row1col2":
+        game.play(1, 2);
+        render();
+        break;
+
+      case "row2col0":
+        game.play(2, 0);
+        render();
+        break;
+
+      case "row2col1":
+        game.play(2, 1);
+        render();
+        break;
+
+      case "row2col2":
+        game.play(2, 2);
+        render();
+        break;
     }
   }
 })();
