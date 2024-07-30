@@ -2,12 +2,107 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  line-height: 1.5;
+  --background-color: hsl(240, 100%, 3%);
+  --text-color: #fffafa;
+  --arcade-yellow: #fdda61;
+  --arcade-green: rgb(12, 182, 37);
+  --arcade-blue: hsl(249, 80%, 46%);
+  --arcade-purple: hsl(277, 45%, 40%);
+  --arcade-red: hsl(11, 100%, 45%);
+  --arcade-pink: #ff2ec1;
+}
+@font-face {
+  font-family: "heading";
+  src: url("fonts/pressstart2p-regular-webfont.woff2") format("woff2"),
+    url("fonts/pressstart2p-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "silkscreenbold";
+  src: url("fonts/silkscreen-bold-webfont.woff2") format("woff2"),
+    url("fonts/silkscreen-bold-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "body";
+  src: url("fonts/silkscreen-regular-webfont.woff2") format("woff2"),
+    url("fonts/silkscreen-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "text";
+  src: url("fonts/orbitron-variablefont_wght-webfont.woff2") format("woff2"),
+    url("fonts/orbitron-variablefont_wght-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
 }
 body {
+  background-color: var(--background-color);
   display: flex;
   flex-direction: column;
+  gap: 40px;
   align-items: center;
   justify-content: center;
+  font-family: "body", sans-serif;
+  color: var(--text-color);
+}
+
+header {
+  margin-top: 20px;
+  font-family: "heading", sans-serif;
+  font-size: 3rem;
+  color: var(--text-color);
+  animation: animate 10s ease infinite alternate;
+}
+@keyframes animate {
+  0% {
+    color: var(--text-color);
+  }
+  25% {
+    color: var(--arcade-yellow);
+  }
+  50% {
+    color: var(--arcade-red);
+  }
+  75% {
+    color: var(--arcade-green);
+  }
+  100% {
+    color: var(--arcade-pink);
+  }
+}
+
+h1 {
+  color: var(--arcade-green);
+  font-size: 4rem;
+}
+
+h1.active {
+  color: var(--arcade-pink);
+}
+
+.button-container {
+  display: flex;
+  gap: 50px;
+}
+
+button#reset-button {
+  font-family: "heading", serif;
+  font-size: 0.8rem;
+  background-color: var(--arcade-red);
+  color: var(--text-color);
+  border: none;
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  cursor: pointer;
 }
 
 .grid-container {
@@ -16,16 +111,36 @@ body {
   height: 500px;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
-  border: 1px solid black;
+  border: 5px solid var(--arcade-pink);
 }
 
 .grid-container > div {
+  font-family: "heading", serif;
   display: flex;
-  border: 1px solid black;
+  border: 5px solid var(--arcade-pink);
   width: 100%;
   height: 100%;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 4rem;
+  color: var(--arcade-yellow);
+}
+
+.grid-container > div:hover {
+  background-color: rgba(0, 0, 102, 0.9);
+}
+
+dialog {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 500px;
+  width: 1000px;
+}
+
+#game-over-message {
+  color: var(--arcade-red);
+  font-size: 5rem;
 }

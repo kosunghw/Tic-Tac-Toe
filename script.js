@@ -40,7 +40,7 @@ const Game = function (player1, player2) {
     if (player1Turn) {
       if (board[row][column] === null) {
         Gameboard.setBoard(row, column, player1.marker);
-        checkWinner(++moveCount, row, column, player1);
+        checkWinner(++moveCount, row, column, player2);
         player1Turn = !player1Turn;
       } else {
         console.log("Already taken! Place again");
@@ -59,6 +59,7 @@ const Game = function (player1, player2) {
   function resetGame() {
     Gameboard.resetBoard();
     moveCount = 0;
+    player1Turn = true;
   }
 
   const checkWinner = function (moveCount, row, column, player) {
@@ -72,7 +73,6 @@ const Game = function (player1, player2) {
       }
       if (i === 2) {
         console.log(`${player.name} has won the game!`);
-        resetGame();
       }
     }
 
@@ -83,7 +83,6 @@ const Game = function (player1, player2) {
       }
       if (i === 2) {
         console.log(`${player.name} has won the game!`);
-        resetGame();
       }
     }
 
@@ -95,7 +94,6 @@ const Game = function (player1, player2) {
         }
         if (i === 2) {
           console.log(`${player.name} has won the game!`);
-          resetGame();
         }
       }
     }
@@ -108,7 +106,6 @@ const Game = function (player1, player2) {
         }
         if (i === 2) {
           console.log(`${player.name} has won the game!`);
-          resetGame();
         }
       }
     }
@@ -117,24 +114,26 @@ const Game = function (player1, player2) {
 
     if (moveCount >= 9) {
       console.log(`DRAW`);
-      resetGame();
     }
   };
 
-  return { play };
+  return { play, reset: resetGame };
 };
 
-const screen = (function () {
-  const player1 = createPlayer("sunghwan", "X");
-  const player2 = createPlayer("rachel", "O");
+const displayController = (function () {
+  const player1 = createPlayer("Player 1", "X");
+  const player2 = createPlayer("Player 2", "O");
   const game = Game(player1, player2);
+  let playerTurnToggle = true;
 
   // cache DOM
   const container = document.querySelector(".grid-container");
+  const resetBtn = document.querySelector("#reset-button");
+  const playerTurn = document.querySelector("#player-turn-message");
+  const dialog = document.querySelector("#winner-display");
 
   container.addEventListener("click", addMarker);
-
-  render();
+  resetBtn.addEventListener("click", reset);
 
   function render() {
     board = Gameboard.getBoard();
@@ -145,6 +144,12 @@ const screen = (function () {
           board[row][col];
       }
     }
+  }
+
+  function reset() {
+    game.reset();
+    playerTurnToggle = true;
+    render();
   }
 
   function addMarker(event) {
