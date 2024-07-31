@@ -35,12 +35,15 @@ const createPlayer = function (name, marker) {
 const Game = function (player1, player2) {
   let player1Turn = true;
   let moveCount = 0;
+  let gameOver = false;
+  let gameWinner;
+
   const play = function (row, column) {
     let board = Gameboard.getBoard();
     if (player1Turn) {
       if (board[row][column] === null) {
         Gameboard.setBoard(row, column, player1.marker);
-        checkWinner(++moveCount, row, column, player2);
+        checkWinner(++moveCount, row, column, player1);
         player1Turn = !player1Turn;
       } else {
         console.log("Already taken! Place again");
@@ -56,10 +59,15 @@ const Game = function (player1, player2) {
     }
   };
 
+  function isGameOver() {
+    return gameOver;
+  }
+
   function resetGame() {
     Gameboard.resetBoard();
     moveCount = 0;
     player1Turn = true;
+    gameOver = false;
   }
 
   const checkWinner = function (moveCount, row, column, player) {
@@ -73,6 +81,9 @@ const Game = function (player1, player2) {
       }
       if (i === 2) {
         console.log(`${player.name} has won the game!`);
+        gameOver = true;
+        gameWinner = player.name;
+        return;
       }
     }
 
@@ -83,6 +94,9 @@ const Game = function (player1, player2) {
       }
       if (i === 2) {
         console.log(`${player.name} has won the game!`);
+        gameOver = true;
+        gameWinner = player.name;
+        return;
       }
     }
 
@@ -94,6 +108,9 @@ const Game = function (player1, player2) {
         }
         if (i === 2) {
           console.log(`${player.name} has won the game!`);
+          gameOver = true;
+          gameWinner = player.name;
+          return;
         }
       }
     }
@@ -106,6 +123,9 @@ const Game = function (player1, player2) {
         }
         if (i === 2) {
           console.log(`${player.name} has won the game!`);
+          gameOver = true;
+          gameWinner = player.name;
+          return;
         }
       }
     }
@@ -114,10 +134,16 @@ const Game = function (player1, player2) {
 
     if (moveCount >= 9) {
       console.log(`DRAW`);
+      gameOver = true;
+      gameWinner = "DRAW";
     }
   };
 
-  return { play, reset: resetGame };
+  function getGameWinner() {
+    return gameWinner;
+  }
+
+  return { play, reset: resetGame, isGameOver, getGameWinner };
 };
 
 const displayController = (function () {
@@ -129,14 +155,27 @@ const displayController = (function () {
   // cache DOM
   const container = document.querySelector(".grid-container");
   const resetBtn = document.querySelector("#reset-button");
-  const playerTurn = document.querySelector("#player-turn-message");
-  const dialog = document.querySelector("#winner-display");
+  const overMessage = document.querySelector("#display-winner");
 
   container.addEventListener("click", addMarker);
   resetBtn.addEventListener("click", reset);
 
   function render() {
     board = Gameboard.getBoard();
+
+    if (game.isGameOver()) {
+      if (game.getGameWinner() === player1.name) {
+        overMessage.textContent = `${player1.name} WINS`;
+        overMessage.style.display = "block";
+      } else if (game.getGameWinner() === player2.name) {
+        overMessage.textContent = `${player2.name} WINS`;
+        overMessage.style.display = "block";
+      } else {
+        overMessage.textContent = `DRAW, PLAY AGAIN`;
+        overMessage.style.display = "block";
+      }
+    }
+
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {
         // for each row and each column
@@ -147,6 +186,7 @@ const displayController = (function () {
   }
 
   function reset() {
+    overMessage.textContent = "";
     game.reset();
     playerTurnToggle = true;
     render();
@@ -154,6 +194,10 @@ const displayController = (function () {
 
   function addMarker(event) {
     let target = event.target;
+
+    if (game.isGameOver() === true) {
+      return;
+    }
 
     switch (target.id) {
       case "row0col0":
@@ -202,4 +246,5 @@ const displayController = (function () {
         break;
     }
   }
+  return { game };
 })();

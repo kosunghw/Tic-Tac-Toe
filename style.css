@@ -44,6 +44,7 @@
   font-style: normal;
 }
 body {
+  position: relative;
   background-color: var(--background-color);
   display: flex;
   flex-direction: column;
@@ -79,6 +80,33 @@ header {
   }
 }
 
+@keyframes winner-animate {
+  0% {
+    color: var(--arcade-yellow);
+  }
+  100% {
+    color: var(--text-color);
+  }
+}
+
+@keyframes border-animate {
+  0% {
+    border-color: var(--arcade-yellow);
+  }
+  25% {
+    border-color: var(--text-color);
+  }
+  50% {
+    border-color: var(--arcade-blue);
+  }
+  75% {
+    border-color: var(--arcade-pink);
+  }
+  100% {
+    border-color: var(--arcade-green);
+  }
+}
+
 h1 {
   color: var(--arcade-green);
   font-size: 4rem;
@@ -100,8 +128,8 @@ button#reset-button {
   color: var(--text-color);
   border: none;
   border-radius: 50%;
-  height: 100px;
-  width: 100px;
+  height: 120px;
+  width: 120px;
   cursor: pointer;
 }
 
@@ -112,6 +140,7 @@ button#reset-button {
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   border: 5px solid var(--arcade-pink);
+  animation: border-animate 5s ease infinite alternate;
 }
 
 .grid-container > div {
@@ -125,22 +154,21 @@ button#reset-button {
   cursor: pointer;
   font-size: 4rem;
   color: var(--arcade-yellow);
+  animation: border-animate 5s ease infinite alternate;
 }
 
 .grid-container > div:hover {
   background-color: rgba(0, 0, 102, 0.9);
 }
 
-dialog {
+#display-winner {
+  width: 100%;
+  color: var(--arcade-red);
+  font-size: 10rem;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  height: 500px;
-  width: 1000px;
-}
-
-#game-over-message {
-  color: var(--arcade-red);
-  font-size: 5rem;
+  text-align: center;
+  animation: winner-animate 0.1s ease infinite alternate;
 }
