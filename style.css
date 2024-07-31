@@ -53,6 +53,8 @@ body {
   justify-content: center;
   font-family: "body", sans-serif;
   color: var(--text-color);
+  width: 100%;
+  height: 100%;
 }
 
 header {
@@ -107,13 +109,12 @@ header {
   }
 }
 
-h1 {
-  color: var(--arcade-green);
-  font-size: 4rem;
+#player-turn {
+  font-size: 2rem;
 }
 
-h1.active {
-  color: var(--arcade-pink);
+#player-turn.active {
+  color: var(--arcade-green);
 }
 
 .button-container {

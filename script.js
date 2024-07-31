@@ -150,12 +150,13 @@ const displayController = (function () {
   const player1 = createPlayer("Player 1", "X");
   const player2 = createPlayer("Player 2", "O");
   const game = Game(player1, player2);
-  let playerTurnToggle = true;
+  let playerTurnToggle = false;
 
   // cache DOM
   const container = document.querySelector(".grid-container");
   const resetBtn = document.querySelector("#reset-button");
   const overMessage = document.querySelector("#display-winner");
+  const playerTurn = document.querySelector("#player-turn");
 
   container.addEventListener("click", addMarker);
   resetBtn.addEventListener("click", reset);
@@ -187,9 +188,21 @@ const displayController = (function () {
 
   function reset() {
     overMessage.textContent = "";
+    playerTurn.textContent = "player 1's turn";
+    playerTurn.classList.remove("active");
     game.reset();
-    playerTurnToggle = true;
+    playerTurnToggle = false;
     render();
+  }
+
+  function displayTurn() {
+    if (!playerTurnToggle) {
+      playerTurn.textContent = "Player 2's TURN";
+      playerTurn.classList.toggle("active");
+    } else {
+      playerTurn.textContent = "Player 1's TURN";
+      playerTurn.classList.toggle("active");
+    }
   }
 
   function addMarker(event) {
@@ -202,49 +215,44 @@ const displayController = (function () {
     switch (target.id) {
       case "row0col0":
         game.play(0, 0);
-        render();
         break;
 
       case "row0col1":
         game.play(0, 1);
-        render();
         break;
 
       case "row0col2":
         game.play(0, 2);
-        render();
         break;
 
       case "row1col0":
         game.play(1, 0);
-        render();
         break;
 
       case "row1col1":
         game.play(1, 1);
-        render();
         break;
 
       case "row1col2":
         game.play(1, 2);
-        render();
         break;
 
       case "row2col0":
         game.play(2, 0);
-        render();
         break;
 
       case "row2col1":
         game.play(2, 1);
-        render();
         break;
 
       case "row2col2":
         game.play(2, 2);
-        render();
         break;
     }
+
+    render();
+    displayTurn();
+    playerTurnToggle = !playerTurnToggle;
   }
   return { game };
 })();
